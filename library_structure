@@ -1,0 +1,46 @@
+.
+├── Notebook
+│   └── notebook.ipynb
+├── README.md
+├── bse_dsdm
+│   ├── __version__.py
+│   ├── accuracy_testing
+│   │   ├── cross_validation.py
+│   │   └── error_testing_methods.py
+│   ├── data
+│   │   ├── test.csv
+│   │   └── train.csv
+│   ├── graphing
+│   │   └── graphing.py
+│   ├── model_development
+│   │   ├── binary_classifier.py
+│   │   ├── continuous_regressions.py
+│   │   ├── decision_tree.py
+│   │   ├── model.py
+│   │   ├── model_tuning.py
+│   │   ├── regressions.py
+│   │   └── resampling.py
+│   ├── preprocessing
+│   │   ├── data_loader.py
+│   │   ├── feature_scaling.py
+│   │   ├── missing_values.py
+│   │   ├── optimal_outlier_detection.py
+│   │   ├── outlier_detection.py
+│   │   ├── value_encoder.py
+│   │   └── value_imputer.py
+│   ├── tests
+│   │   ├── accuracy_testing
+│   │   ├── preprocessing
+│   │   │   ├── test_feature_scaling.py
+│   │   │   ├── test_missing_values.py
+│   │   │   ├── test_outlier_detection.py
+│   │   │   ├── test_value_encoder.py
+│   │   │   └── test_value_imputer.py
+│   │   └── pytest.ini
+│   └── utilities
+│       └── functions.py
+├── library_structure
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+├── train.csv

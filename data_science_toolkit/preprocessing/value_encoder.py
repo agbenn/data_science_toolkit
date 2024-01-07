@@ -3,19 +3,42 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 
 
-def encode_categorical_columns(df, column=None):
+def encode_categorical_columns(df, columns=None, drop_non_encoded=False):
     """
-    nominal or categorical i.e. blue red green
+    Encode multiple categorical columns using one-hot encoding.
+
+    Parameters:
+    - df (pandas.DataFrame): The input DataFrame.
+    - columns (list): A list of column names to be one-hot encoded.
+
+    Returns:
+    pandas.DataFrame: The DataFrame with one-hot encoded columns.
+
+    Example:
+    ```python
+    df = encode_categorical_columns(df, columns=['col1', 'col2'])
+    ```
     """
-    column_to_encode = df[[column]]
-    # Apply one-hot encoding
-    encoder = OneHotEncoder(drop='first', sparse=False)
+    if not columns:
+        raise ValueError("Please provide a list of columns to encode.")
 
-    encoded_data = encoder.fit_transform(column_to_encode)
-    # Convert the encoded data back to a dataframe
+    # Apply one-hot encoding for each specified column
+    for column in columns:
+        column_to_encode = df[[column]]
 
-    encoded_data = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out([column]))
-    df = pd.concat([df, encoded_data], axis=1)
+        # Apply one-hot encoding
+        encoder = OneHotEncoder(sparse=False)
+        encoded_data = encoder.fit_transform(column_to_encode)
+
+        # Convert the encoded data back to a dataframe
+        encoded_data = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out([column]))
+        
+        # Concatenate the encoded data with the original DataFrame
+        df = pd.concat([df, encoded_data], axis=1)
+    
+    if drop_non_encoded:
+        df = df.drop(columns=columns)
+
     return df
 
 

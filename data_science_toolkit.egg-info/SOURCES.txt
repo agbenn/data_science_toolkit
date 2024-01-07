@@ -1,0 +1,8 @@
+README.md
+setup.cfg
+setup.py
+data_science_toolkit.egg-info/PKG-INFO
+data_science_toolkit.egg-info/SOURCES.txt
+data_science_toolkit.egg-info/dependency_links.txt
+data_science_toolkit.egg-info/requires.txt
+data_science_toolkit.egg-info/top_level.txt

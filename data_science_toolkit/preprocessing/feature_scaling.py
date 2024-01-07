@@ -1,11 +1,50 @@
 from scipy import stats 
+import warnings
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
 
+#TODO add a function to minimize or maximize the error term instead of always minimizing
+def optimal_scale_features(X,y, accuracy_test='neg_mean_squared_error'):
+    """
 
-'''
-# Standardize the features
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)'''
+        Parameters:
+        - X (DataFrame): Features.
+        - y (Series): Target variable.
+        - model_type (str): Type of model ('binary', 'multiclass', 'regression').
+        - accuracy_test (str): Scoring metric for model evaluation (default is 'accuracy').
+
+        Returns:
+        - Tuple: DataFrame with outliers removed, dictionary with optimal accuracy score and parameter value.
+
+        decrease iqr to increase outlier removal
+        increase cov_contamination to increase outlier removal
+        decrease std_threshold to increase outlier removal
+        local_n_neighbors depends on the sample size
+    """
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        z_score = scale_features(X,y, scaling_method='z_score')
+        min_max_mean = scale_features(X,y, removal_type='min_max_mean')
+        min_max = scale_features(X,y, removal_type='min_max')
+        iqr = scale_features(X,y, removal_type='iqr')
+        
+        model = LogisticRegression()
+        min_accuracy = None
+        min_data_set = None
+        for results in [z_score,min_max_mean,min_max,iqr]:
+            X_train = X.dropna()
+            y_train = y.iloc[X_train.index]
+            accuracy = None
+            try:
+                accuracy = cross_val_score(model, X_train, y_train, cv=3, scoring=accuracy_test)
+                print(accuracy)
+            except Exception as e:
+                print('an exception occured when getting the accuracy')
+                print(str(e))
+            
+        
+        return min_results
+    
 
 def scale_features(data,columns_to_scale, scaling_method='z_score'):
     '''

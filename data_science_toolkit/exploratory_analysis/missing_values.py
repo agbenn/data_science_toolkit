@@ -26,6 +26,7 @@ def remove_columns_with_na(df, threshold):
 def get_columns_by_type(df):
     categorical_columns = list(df.select_dtypes(include=['object']).columns)
     numerical_columns = list(df.select_dtypes(exclude=['object']).columns)
+    binary_columns = df.l
 
     return categorical_columns, numerical_columns
 
@@ -39,14 +40,14 @@ def get_na_columns_by_type(df):
     return categorical_na_columns, numerical_na_columns
 #Other functions that could be added for the exploratory analisis: 
 
+
+def get_na_columns(df):
+    df = df.isna().sum()
+    return(df.sum() > 0)
+
 def get_na_columns_test_train(test, train):
     train_na = train.isna().sum()
     test_na = test.isna().sum()
     nas_testrain = pd.concat([train, test], axis=1, keys=['Train', 'Test'])
 
     return(nas_testrain[nas_testrain.sum(axis=1) > 0])
-
-
-def get_na_columns_test_train(df):
-    df = df.isna().sum()
-    return(df.sum() > 0)

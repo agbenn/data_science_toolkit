@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.tree import plot_tree
 from sklearn.metrics import confusion_matrix
+import warnings
+
+
 
 
 def plot_3d_scatter(data, x_col,y_col,z_col,color_col, x_title=None, y_title=None, z_title=None):
@@ -135,6 +138,7 @@ def plot_distributions_stacked(dataframes, columns, labels, colors=None):
     # Assuming you have three DataFrames called 'df1', 'df2', and 'df3' with columns 'column1', 'column2', ...
     # plot_distributions_stacked([df1, df2, df3], ['column1', 'column2', 'column3'])
     
+    warnings.filterwarnings("ignore")
     # Set default colors if not provided
     if colors is None:
         colors = sns.color_palette("husl", n_colors=len(dataframes))
