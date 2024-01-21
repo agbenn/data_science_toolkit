@@ -25,10 +25,20 @@ def remove_columns_with_na(df, threshold):
 
 def get_columns_by_type(df):
     categorical_columns = list(df.select_dtypes(include=['object']).columns)
-    numerical_columns = list(df.select_dtypes(exclude=['object']).columns)
-    binary_columns = df.l
 
-    return categorical_columns, numerical_columns
+    # Selecting all numerical columns
+    numerical_columns = list(df.select_dtypes(exclude=['object']).columns)
+
+    # Selecting binary columns with True/False or 0/1 values
+    binary_columns = [
+        col for col in df.columns
+        if df[col].nunique() == 2 and df[col].isin([0, 1, True, False]).all()
+    ]
+
+    # Exclude binary columns from numerical columns
+    numerical_columns = list(set(numerical_columns) - set(binary_columns))
+
+    return categorical_columns, numerical_columns, binary_columns
 
 def get_na_columns_by_type(df):
     categorical_columns = df.select_dtypes(include=['object']).columns

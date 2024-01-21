@@ -3,47 +3,51 @@ import warnings
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LogisticRegression
 
-#TODO add a function to minimize or maximize the error term instead of always minimizing
-def optimal_scale_features(X,y, accuracy_test='neg_mean_squared_error'):
+
+def optimal_scale_features(X, y, columns_to_scale, model_type='binary', accuracy_test='accuracy'):
     """
+    Parameters:
+    - X (DataFrame): Features.
+    - y (Series): Target variable.
+    - model_type (str): Type of model ('binary', 'multiclass', 'regression').
+    - accuracy_test (str): Scoring metric for model evaluation (default is 'accuracy').
 
-        Parameters:
-        - X (DataFrame): Features.
-        - y (Series): Target variable.
-        - model_type (str): Type of model ('binary', 'multiclass', 'regression').
-        - accuracy_test (str): Scoring metric for model evaluation (default is 'accuracy').
+    Returns:
+    - Tuple: Dictionary with optimal accuracy score and scaling method.
 
-        Returns:
-        - Tuple: DataFrame with outliers removed, dictionary with optimal accuracy score and parameter value.
-
-        decrease iqr to increase outlier removal
-        increase cov_contamination to increase outlier removal
-        decrease std_threshold to increase outlier removal
-        local_n_neighbors depends on the sample size
     """
+    X_to_scale = X[columns_to_scale]
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        z_score = scale_features(X,y, scaling_method='z_score')
-        min_max_mean = scale_features(X,y, removal_type='min_max_mean')
-        min_max = scale_features(X,y, removal_type='min_max')
-        iqr = scale_features(X,y, removal_type='iqr')
-        
-        model = LogisticRegression()
+
+        scaling_methods = ['No transformation', 'z_score', 'min_max_mean', 'min_max', 'iqr']
         min_accuracy = None
-        min_data_set = None
-        for results in [z_score,min_max_mean,min_max,iqr]:
-            X_train = X.dropna()
-            y_train = y.iloc[X_train.index]
-            accuracy = None
+        best_scaling_method = None
+        best_data_set = None
+
+        for scaling_method in scaling_methods:
+            X_scaled = X_to_scale.copy()
+            if scaling_method != 'No transformation':
+                X_scaled = scale_features(X_to_scale.copy(), X_to_scale.columns, scaling_method)
+
+            model = LogisticRegression()  # You can customize the logistic regression model as needed
+
             try:
-                accuracy = cross_val_score(model, X_train, y_train, cv=3, scoring=accuracy_test)
-                print(accuracy)
+                accuracy = cross_val_score(model, X_scaled, y, cv=3, scoring=accuracy_test).mean()
+                print(f"{scaling_method}: {accuracy}")
+                
+                if min_accuracy is None or accuracy > min_accuracy:
+                    min_accuracy = accuracy
+                    best_scaling_method = scaling_method
+                    best_data_set = X_scaled
             except Exception as e:
-                print('an exception occured when getting the accuracy')
+                print(f'An exception occurred when getting the accuracy for {scaling_method}')
                 print(str(e))
-            
-        
-        return min_results
+
+        X[columns_to_scale] = best_data_set
+
+        return {'optimal_accuracy': min_accuracy, 'optimal_scaling_method': best_scaling_method, 'optimal_X_data_set':X}
     
 
 def scale_features(data,columns_to_scale, scaling_method='z_score'):
