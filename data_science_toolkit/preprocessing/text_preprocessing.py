@@ -149,28 +149,20 @@ def build_document_vector_matrix(corpus):
 
     return document_vector_matrix
 
-
-sentence1 = "The president of the United States (US) is Joe Biden."
-sentence2 = "Joe Biden the president wants us in a united country."
-sentence3 = "Did a known artist paint portraits of Joe Biden?"
-sentence4 = "A really well-known portrait artist is Vincent van Gogh."
-sentence5 = "The leaves were left untouched, and the bats were unable to bat away the flies."
-
-corpus = [sentence1, sentence2, sentence3, sentence4, sentence5]
-
-print(corpus)
-lemmatized_corpus = spacy_lemmatize_corpus(corpus)
-print(lemmatized_corpus)
-no_punctuation_corpus = remove_non_words_corpus(lemmatized_corpus)
-print(no_punctuation_corpus)
-lowercase_corpus = lowercase_corpus_no_abbr(no_punctuation_corpus)
-print(lowercase_corpus)
-no_stop_words = remove_stop_words_corpus(lowercase_corpus)
-print(no_stop_words)
-stemmed_corpus = stem_corpus(no_stop_words, stem_type='porter')
-print(stemmed_corpus)
-dv_matrix = build_document_vector_matrix(stemmed_corpus)
-print(dv_matrix)    
+def text_pipeline(corpus):
+    print(corpus)
+    lemmatized_corpus = spacy_lemmatize_corpus(corpus)
+    print(lemmatized_corpus)
+    no_punctuation_corpus = remove_non_words_corpus(lemmatized_corpus)
+    print(no_punctuation_corpus)
+    lowercase_corpus = lowercase_corpus_no_abbr(no_punctuation_corpus)
+    print(lowercase_corpus)
+    no_stop_words = remove_stop_words_corpus(lowercase_corpus)
+    print(no_stop_words)
+    stemmed_corpus = stem_corpus(no_stop_words, stem_type='porter')
+    print(stemmed_corpus)
+    dv_matrix = build_document_vector_matrix(stemmed_corpus)
+    print(dv_matrix)    
 
 
 #TODO: retain dictionary from lemmatization and create a list of all words 
